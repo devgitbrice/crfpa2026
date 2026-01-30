@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import BlockEditor from '@/components/BlockEditor'
+import SpeechButton from '@/components/SpeechButton'
 import { supabase } from '@/lib/supabase'
 import { CrfpaPage, Subject, SUBJECTS } from '@/lib/types'
 
@@ -120,14 +121,21 @@ export default function PageView() {
                     </button>
                   </div>
                 ) : (
-                  <h1
-                    className="text-2xl font-bold cursor-pointer hover:opacity-70 transition"
-                    style={{ color: subjectInfo.color }}
-                    onClick={() => setEditingTitle(true)}
-                    title="Cliquer pour modifier le titre"
-                  >
-                    {page.title}
-                  </h1>
+                  <div className="flex items-center justify-between gap-4">
+                    <h1
+                      className="text-2xl font-bold cursor-pointer hover:opacity-70 transition"
+                      style={{ color: subjectInfo.color }}
+                      onClick={() => setEditingTitle(true)}
+                      title="Cliquer pour modifier le titre"
+                    >
+                      {page.title}
+                    </h1>
+                    <SpeechButton
+                      pageId={pageId}
+                      pageTitle={page.title}
+                      color={subjectInfo.color}
+                    />
+                  </div>
                 )}
               </div>
 
