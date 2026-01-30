@@ -42,18 +42,20 @@ export default function ChatbotWidget() {
         }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Erreur de communication avec le chatbot')
+        throw new Error(data.error || 'Erreur de communication avec le chatbot')
       }
 
-      const data = await response.json()
       const assistantMessage: Message = { role: 'assistant', content: data.message }
       setMessages([...newMessages, assistantMessage])
     } catch (error) {
       console.error('Chatbot error:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: 'Desole, une erreur est survenue. Veuillez reessayer.' }
+        { role: 'assistant', content: `Erreur: ${errorMessage}` }
       ])
     } finally {
       setIsLoading(false)
@@ -87,7 +89,7 @@ export default function ChatbotWidget() {
               <span className="text-xl">🤖</span>
               <div>
                 <h3 className="font-semibold text-sm">Assistant CRFPA</h3>
-                <p className="text-xs text-blue-100">GPT-5.2</p>
+                <p className="text-xs text-blue-100">GPT-4o</p>
               </div>
             </div>
             <button
