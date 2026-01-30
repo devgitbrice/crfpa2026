@@ -13,10 +13,10 @@ export default function SubjectPage() {
 
   if (!subjectInfo) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-[var(--background)]">
         <Header />
         <main className="p-8 text-center">
-          <h2 className="text-2xl font-bold text-slate-800">
+          <h2 className="text-2xl font-bold">
             Matière non trouvée
           </h2>
         </main>
@@ -25,7 +25,7 @@ export default function SubjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--background)]">
       <Header />
       <div className="flex">
         <Sidebar subject={subject} />
@@ -37,12 +37,12 @@ export default function SubjectPage() {
             >
               {subjectInfo.name}
             </h2>
-            <p className="text-slate-600 mb-8">
+            <p className="text-[var(--muted)] mb-8">
               Sélectionnez une page dans le menu de gauche ou créez-en une
               nouvelle pour commencer vos révisions.
             </p>
             <div
-              className="inline-block p-8 rounded-xl text-white"
+              className="inline-block p-8 rounded-xl"
               style={{ backgroundColor: subjectInfo.color + '20' }}
             >
               <p style={{ color: subjectInfo.color }}>

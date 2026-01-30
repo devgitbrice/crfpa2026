@@ -201,7 +201,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
                 updateBlock(block.id, { content: e.target.value })
               }
               placeholder="Citation..."
-              className={`${baseClasses} italic text-slate-600`}
+              className={`${baseClasses} italic text-[var(--muted)]`}
               rows={2}
             />
           </div>
@@ -212,7 +212,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
             value={block.content}
             onChange={(e) => updateBlock(block.id, { content: e.target.value })}
             placeholder="Code..."
-            className={`${baseClasses} font-mono bg-slate-100 p-3 rounded-lg text-sm`}
+            className={`${baseClasses} font-mono bg-[var(--muted-bg)] p-3 rounded-lg text-sm`}
             rows={3}
           />
         )
@@ -238,7 +238,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-slate-500">
+      <div className="p-8 text-center text-[var(--muted)]">
         Chargement des blocs...
       </div>
     )
@@ -248,7 +248,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
     <div className="p-6">
       {blocks.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-slate-500 mb-4">
+          <p className="text-[var(--muted)] mb-4">
             Cette page est vide. Ajoutez votre premier bloc !
           </p>
           <button
@@ -266,8 +266,8 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
               key={block.id}
               className={`group relative p-3 rounded-lg border transition ${
                 activeBlockId === block.id
-                  ? 'border-slate-300 bg-slate-50'
-                  : 'border-transparent hover:border-slate-200'
+                  ? 'border-[var(--card-border)] bg-[var(--muted-bg)]'
+                  : 'border-transparent hover:border-[var(--card-border)]'
               }`}
               onClick={() => setActiveBlockId(block.id)}
             >
@@ -278,7 +278,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
                     e.stopPropagation()
                     setShowTypeMenu(showTypeMenu === block.id ? null : block.id)
                   }}
-                  className="p-1 text-xs bg-slate-200 rounded hover:bg-slate-300"
+                  className="p-1 text-xs bg-[var(--muted-bg)] rounded hover:bg-[var(--hover-bg)]"
                   title="Changer le type"
                 >
                   ⋮⋮
@@ -288,7 +288,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
                     e.stopPropagation()
                     moveBlock(block.id, 'up')
                   }}
-                  className="p-1 text-xs bg-slate-200 rounded hover:bg-slate-300"
+                  className="p-1 text-xs bg-[var(--muted-bg)] rounded hover:bg-[var(--hover-bg)]"
                   title="Monter"
                   disabled={index === 0}
                 >
@@ -299,7 +299,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
                     e.stopPropagation()
                     moveBlock(block.id, 'down')
                   }}
-                  className="p-1 text-xs bg-slate-200 rounded hover:bg-slate-300"
+                  className="p-1 text-xs bg-[var(--muted-bg)] rounded hover:bg-[var(--hover-bg)]"
                   title="Descendre"
                   disabled={index === blocks.length - 1}
                 >
@@ -309,8 +309,8 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
 
               {/* Type menu */}
               {showTypeMenu === block.id && (
-                <div className="absolute left-0 top-0 -translate-x-full mr-2 bg-white shadow-lg rounded-lg border p-2 z-10 w-48">
-                  <p className="text-xs text-slate-500 mb-2 px-2">Type de bloc</p>
+                <div className="absolute left-0 top-0 -translate-x-full mr-2 bg-[var(--card-bg)] shadow-lg rounded-lg border border-[var(--card-border)] p-2 z-10 w-48">
+                  <p className="text-xs text-[var(--muted)] mb-2 px-2">Type de bloc</p>
                   {BLOCK_TYPES.map((type) => (
                     <button
                       key={type.type}
@@ -319,8 +319,8 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
                         updateBlock(block.id, { type: type.type })
                         setShowTypeMenu(null)
                       }}
-                      className={`w-full text-left px-2 py-1 rounded text-sm hover:bg-slate-100 flex items-center gap-2 ${
-                        block.type === type.type ? 'bg-slate-100' : ''
+                      className={`w-full text-left px-2 py-1 rounded text-sm hover:bg-[var(--hover-bg)] flex items-center gap-2 ${
+                        block.type === type.type ? 'bg-[var(--muted-bg)]' : ''
                       }`}
                     >
                       <span className="w-6 text-center font-mono text-xs">
@@ -341,7 +341,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
                   e.stopPropagation()
                   deleteBlock(block.id)
                 }}
-                className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500"
+                className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 p-1 text-[var(--muted)] hover:text-red-500"
                 title="Supprimer"
               >
                 ✕
@@ -352,7 +352,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
           {/* Add block button */}
           <button
             onClick={() => addBlock(blocks.length - 1)}
-            className="w-full py-3 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg border-2 border-dashed border-slate-200 hover:border-slate-300 transition"
+            className="w-full py-3 text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--hover-bg)] rounded-lg border-2 border-dashed border-[var(--card-border)] hover:border-[var(--muted)] transition"
           >
             + Ajouter un bloc
           </button>

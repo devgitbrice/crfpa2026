@@ -59,10 +59,10 @@ export default function PageView() {
 
   if (!subjectInfo) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-[var(--background)]">
         <Header />
         <main className="p-8 text-center">
-          <h2 className="text-2xl font-bold text-slate-800">
+          <h2 className="text-2xl font-bold">
             Matière non trouvée
           </h2>
         </main>
@@ -71,16 +71,16 @@ export default function PageView() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--background)]">
       <Header />
       <div className="flex">
         <Sidebar subject={subject} />
         <main className="flex-1">
           {loading ? (
-            <div className="p-8 text-center text-slate-500">Chargement...</div>
+            <div className="p-8 text-center text-[var(--muted)]">Chargement...</div>
           ) : !page ? (
             <div className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-slate-800">
+              <h2 className="text-2xl font-bold">
                 Page non trouvée
               </h2>
             </div>
@@ -101,7 +101,7 @@ export default function PageView() {
                         if (e.key === 'Enter') updateTitle()
                         if (e.key === 'Escape') setEditingTitle(false)
                       }}
-                      className="text-2xl font-bold flex-1 px-2 py-1 border rounded"
+                      className="text-2xl font-bold flex-1 px-2 py-1 border rounded bg-[var(--card-bg)] border-[var(--card-border)]"
                       style={{ color: subjectInfo.color }}
                       autoFocus
                     />
@@ -114,7 +114,7 @@ export default function PageView() {
                     </button>
                     <button
                       onClick={() => setEditingTitle(false)}
-                      className="px-4 py-2 bg-slate-200 rounded-lg"
+                      className="px-4 py-2 bg-[var(--muted-bg)] rounded-lg"
                     >
                       Annuler
                     </button>
