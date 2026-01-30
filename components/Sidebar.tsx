@@ -117,7 +117,7 @@ export default function Sidebar({ subject }: SidebarProps) {
 
   return (
     <aside
-      className="w-64 min-h-screen border-r p-4"
+      className="w-64 min-h-screen border-r border-[var(--card-border)] p-4 bg-[var(--card-bg)]"
       style={{ borderColor: subjectInfo?.color + '40' }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -137,9 +137,9 @@ export default function Sidebar({ subject }: SidebarProps) {
       </div>
 
       {loading ? (
-        <p className="text-slate-500 text-sm">Chargement...</p>
+        <p className="text-[var(--muted)] text-sm">Chargement...</p>
       ) : pages.length === 0 ? (
-        <p className="text-slate-500 text-sm">Aucune page. Créez-en une !</p>
+        <p className="text-[var(--muted)] text-sm">Aucune page. Créez-en une !</p>
       ) : (
         <ul className="space-y-1">
           {pages.map((page, index) => (
@@ -154,7 +154,7 @@ export default function Sidebar({ subject }: SidebarProps) {
                       if (e.key === 'Enter') updatePageTitle(page.id)
                       if (e.key === 'Escape') setEditingId(null)
                     }}
-                    className="flex-1 px-2 py-1 text-sm border rounded"
+                    className="flex-1 px-2 py-1 text-sm border rounded bg-[var(--card-bg)] border-[var(--card-border)]"
                     autoFocus
                   />
                   <button
@@ -170,7 +170,7 @@ export default function Sidebar({ subject }: SidebarProps) {
                   <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
                     <button
                       onClick={() => movePage(page.id, 'up')}
-                      className={`px-1 text-xs text-slate-400 hover:text-slate-600 ${
+                      className={`px-1 text-xs text-[var(--muted)] hover:text-[var(--foreground)] ${
                         index === 0 ? 'invisible' : ''
                       }`}
                       title="Monter"
@@ -180,7 +180,7 @@ export default function Sidebar({ subject }: SidebarProps) {
                     </button>
                     <button
                       onClick={() => movePage(page.id, 'down')}
-                      className={`px-1 text-xs text-slate-400 hover:text-slate-600 ${
+                      className={`px-1 text-xs text-[var(--muted)] hover:text-[var(--foreground)] ${
                         index === pages.length - 1 ? 'invisible' : ''
                       }`}
                       title="Descendre"
@@ -194,7 +194,7 @@ export default function Sidebar({ subject }: SidebarProps) {
                     className={`flex-1 px-3 py-2 rounded-lg text-sm transition ${
                       currentPageId === page.id
                         ? 'text-white'
-                        : 'hover:bg-slate-100'
+                        : 'hover:bg-[var(--hover-bg)]'
                     }`}
                     style={{
                       backgroundColor:
@@ -210,14 +210,14 @@ export default function Sidebar({ subject }: SidebarProps) {
                       setEditingId(page.id)
                       setEditTitle(page.title)
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-slate-600"
+                    className="opacity-0 group-hover:opacity-100 p-1 text-[var(--muted)] hover:text-[var(--foreground)]"
                     title="Modifier"
                   >
                     ✏️
                   </button>
                   <button
                     onClick={() => deletePage(page.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500"
+                    className="opacity-0 group-hover:opacity-100 p-1 text-[var(--muted)] hover:text-red-500"
                     title="Supprimer"
                   >
                     🗑️
