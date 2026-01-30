@@ -10,7 +10,7 @@ const VERSION_DATE = '30 janvier 2026 - 23:30'
 export default function Header() {
   const pathname = usePathname()
   const currentSubject = pathname.split('/')[1] || ''
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme, mounted } = useTheme()
 
   return (
     <header className="bg-[var(--card-bg)] border-b border-[var(--card-border)] shadow-lg">
@@ -18,13 +18,15 @@ export default function Header() {
         <span className="flex-1"></span>
         <span>Dernière mise à jour : {VERSION_DATE}</span>
         <span className="flex-1 flex justify-end">
-          <button
-            onClick={toggleTheme}
-            className="px-3 py-1 rounded-lg text-sm bg-[var(--muted-bg)] hover:bg-[var(--hover-bg)] transition"
-            title={theme === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair'}
-          >
-            {theme === 'light' ? '🌙' : '☀️'}
-          </button>
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="px-3 py-1 rounded-lg text-sm bg-[var(--muted-bg)] hover:bg-[var(--hover-bg)] transition"
+              title={theme === 'light' ? 'Activer le mode sombre' : 'Activer le mode clair'}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+          )}
         </span>
       </div>
       <div className="px-4 py-3">
