@@ -91,6 +91,30 @@ export default function Sidebar({ subject }: SidebarProps) {
     }
   }
 
+  async function movePage(pageId: string, direction: 'up' | 'down') {
+    const pageIndex = pages.findIndex((p) => p.id === pageId)
+    if (pageIndex === -1) return
+
+    const newIndex = direction === 'up' ? pageIndex - 1 : pageIndex + 1
+    if (newIndex < 0 || newIndex >= pages.length) return
+
+    const currentPage = pages[pageIndex]
+    const swapPage = pages[newIndex]
+
+    // Swap order_index values
+    await supabase
+      .from('crfpa_pages')
+      .update({ order_index: newIndex })
+      .eq('id', currentPage.id)
+
+    await supabase
+      .from('crfpa_pages')
+      .update({ order_index: pageIndex })
+      .eq('id', swapPage.id)
+
+    loadPages()
+  }
+
   return (
     <aside
       className="w-64 min-h-screen border-r p-4"
@@ -118,7 +142,7 @@ export default function Sidebar({ subject }: SidebarProps) {
         <p className="text-slate-500 text-sm">Aucune page. Créez-en une !</p>
       ) : (
         <ul className="space-y-1">
-          {pages.map((page) => (
+          {pages.map((page, index) => (
             <li key={page.id} className="group">
               {editingId === page.id ? (
                 <div className="flex gap-1">
@@ -142,6 +166,29 @@ export default function Sidebar({ subject }: SidebarProps) {
                 </div>
               ) : (
                 <div className="flex items-center gap-1">
+                  {/* Boutons de réordonnancement */}
+                  <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
+                    <button
+                      onClick={() => movePage(page.id, 'up')}
+                      className={`px-1 text-xs text-slate-400 hover:text-slate-600 ${
+                        index === 0 ? 'invisible' : ''
+                      }`}
+                      title="Monter"
+                      disabled={index === 0}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      onClick={() => movePage(page.id, 'down')}
+                      className={`px-1 text-xs text-slate-400 hover:text-slate-600 ${
+                        index === pages.length - 1 ? 'invisible' : ''
+                      }`}
+                      title="Descendre"
+                      disabled={index === pages.length - 1}
+                    >
+                      ▼
+                    </button>
+                  </div>
                   <Link
                     href={`/${subject}/${page.id}`}
                     className={`flex-1 px-3 py-2 rounded-lg text-sm transition ${
