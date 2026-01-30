@@ -50,8 +50,9 @@ Reponds de maniere claire, structuree et pedagogique. Utilise des exemples concr
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
       console.error('OpenAI Chat error:', errorData)
+      const errorMessage = errorData?.error?.message || 'Erreur lors de la generation de la reponse'
       return NextResponse.json(
-        { error: 'Erreur lors de la generation de la reponse' },
+        { error: errorMessage },
         { status: response.status }
       )
     }
