@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeProvider } from '@/lib/ThemeContext'
+import { ChatbotProvider } from '@/lib/ChatbotContext'
+import ChatbotWidget from '@/components/ChatbotWidget'
 
 export const metadata: Metadata = {
   title: 'CRFPA 2026 - Révisions',
@@ -15,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <ChatbotProvider>
+            {children}
+            <ChatbotWidget />
+          </ChatbotProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

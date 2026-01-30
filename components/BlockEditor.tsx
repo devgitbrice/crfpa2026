@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { CrfpaBlock, BLOCK_TYPES } from '@/lib/types'
+import { useChatbot } from '@/lib/ChatbotContext'
 import { v4 as uuidv4 } from 'uuid'
 
 interface BlockEditorProps {
@@ -16,6 +17,46 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null)
   const [showTypeMenu, setShowTypeMenu] = useState<string | null>(null)
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const { registerInsertHandler, unregisterInsertHandler, setCurrentPageId } = useChatbot()
+
+  // Register chatbot insert handler
+  const insertContentFromChatbot = useCallback(async (content: string) => {
+    const newBlock: Partial<CrfpaBlock> = {
+      id: uuidv4(),
+      page_id: pageId,
+      type: 'text',
+      content: content,
+      order_index: blocks.length,
+    }
+
+    const { error } = await supabase.from('crfpa_blocks').insert(newBlock)
+
+    if (error) {
+      console.error('Error creating block from chatbot:', error)
+    } else {
+      // Reload blocks to show the new content
+      const { data } = await supabase
+        .from('crfpa_blocks')
+        .select('*')
+        .eq('page_id', pageId)
+        .order('order_index', { ascending: true })
+
+      if (data) {
+        setBlocks(data)
+        setActiveBlockId(newBlock.id!)
+      }
+    }
+  }, [pageId, blocks.length])
+
+  useEffect(() => {
+    setCurrentPageId(pageId)
+    registerInsertHandler(insertContentFromChatbot)
+
+    return () => {
+      setCurrentPageId(null)
+      unregisterInsertHandler()
+    }
+  }, [pageId, insertContentFromChatbot, registerInsertHandler, unregisterInsertHandler, setCurrentPageId])
 
   useEffect(() => {
     loadBlocks()
