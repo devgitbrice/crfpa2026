@@ -42,8 +42,7 @@ Reponds de maniere claire, structuree et pedagogique. Utilise des exemples concr
           },
           ...messages
         ],
-        max_tokens: 2048,
-        temperature: 0.7,
+        max_completion_tokens: 2048,
       }),
     })
 
