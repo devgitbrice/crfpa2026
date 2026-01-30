@@ -89,7 +89,7 @@ export default function ChatbotWidget() {
               <span className="text-xl">🤖</span>
               <div>
                 <h3 className="font-semibold text-sm">Assistant CRFPA</h3>
-                <p className="text-xs text-blue-100">GPT-4o</p>
+                <p className="text-xs text-blue-100">GPT-5.2</p>
               </div>
             </div>
             <button
