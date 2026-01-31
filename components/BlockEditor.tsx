@@ -19,6 +19,22 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const { registerInsertHandler, unregisterInsertHandler, setCurrentPageId } = useChatbot()
 
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  // Auto-resize textarea to fit content
+  const autoResize = useCallback((textarea: HTMLTextAreaElement | null) => {
+    if (textarea) {
+      textarea.style.height = 'auto'
+      textarea.style.height = textarea.scrollHeight + 'px'
+    }
+  }, [])
+
+  // Auto-resize all textareas when blocks change
+  useEffect(() => {
+    const textareas = document.querySelectorAll<HTMLTextAreaElement>('.block-textarea')
+    textareas.forEach(textarea => autoResize(textarea))
+  }, [blocks, autoResize])
+
   // Register chatbot insert handler
   const insertContentFromChatbot = useCallback(async (content: string) => {
     const newBlock: Partial<CrfpaBlock> = {
@@ -169,7 +185,13 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
 
   function renderBlockContent(block: CrfpaBlock) {
     const baseClasses =
-      'w-full bg-transparent border-none outline-none resize-none'
+      'block-textarea w-full bg-transparent border-none outline-none resize-none overflow-hidden'
+
+    const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
+      const target = e.target as HTMLTextAreaElement
+      target.style.height = 'auto'
+      target.style.height = target.scrollHeight + 'px'
+    }
 
     switch (block.type) {
       case 'heading1':
@@ -177,6 +199,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
           <textarea
             value={block.content}
             onChange={(e) => updateBlock(block.id, { content: e.target.value })}
+            onInput={handleInput}
             placeholder="Titre 1..."
             className={`${baseClasses} text-3xl font-bold`}
             rows={1}
@@ -187,6 +210,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
           <textarea
             value={block.content}
             onChange={(e) => updateBlock(block.id, { content: e.target.value })}
+            onInput={handleInput}
             placeholder="Titre 2..."
             className={`${baseClasses} text-2xl font-bold`}
             rows={1}
@@ -197,6 +221,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
           <textarea
             value={block.content}
             onChange={(e) => updateBlock(block.id, { content: e.target.value })}
+            onInput={handleInput}
             placeholder="Titre 3..."
             className={`${baseClasses} text-xl font-semibold`}
             rows={1}
@@ -211,6 +236,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
               onChange={(e) =>
                 updateBlock(block.id, { content: e.target.value })
               }
+              onInput={handleInput}
               placeholder="Élément de liste..."
               className={baseClasses}
               rows={1}
@@ -227,6 +253,7 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
               onChange={(e) =>
                 updateBlock(block.id, { content: e.target.value })
               }
+              onInput={handleInput}
               placeholder="Élément de liste..."
               className={baseClasses}
               rows={1}
@@ -241,9 +268,10 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
               onChange={(e) =>
                 updateBlock(block.id, { content: e.target.value })
               }
+              onInput={handleInput}
               placeholder="Citation..."
               className={`${baseClasses} italic text-[var(--muted)]`}
-              rows={2}
+              rows={1}
             />
           </div>
         )
@@ -252,9 +280,10 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
           <textarea
             value={block.content}
             onChange={(e) => updateBlock(block.id, { content: e.target.value })}
+            onInput={handleInput}
             placeholder="Code..."
             className={`${baseClasses} font-mono bg-[var(--muted-bg)] p-3 rounded-lg text-sm`}
-            rows={3}
+            rows={1}
           />
         )
       case 'divider':
@@ -264,14 +293,10 @@ export default function BlockEditor({ pageId, color }: BlockEditorProps) {
           <textarea
             value={block.content}
             onChange={(e) => updateBlock(block.id, { content: e.target.value })}
+            onInput={handleInput}
             placeholder="Tapez '/' pour les commandes, ou commencez à écrire..."
             className={baseClasses}
             rows={1}
-            onInput={(e) => {
-              const target = e.target as HTMLTextAreaElement
-              target.style.height = 'auto'
-              target.style.height = target.scrollHeight + 'px'
-            }}
           />
         )
     }
