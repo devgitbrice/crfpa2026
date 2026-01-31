@@ -59,6 +59,27 @@ export default function Sidebar({ subject }: SidebarProps) {
     }
   }
 
+  async function addSection() {
+    const newSection: Partial<CrfpaPage> = {
+      id: uuidv4(),
+      subject,
+      title: '§ Nouvelle section',
+      order_index: pages.length,
+    }
+
+    const { error } = await supabase.from('crfpa_pages').insert(newSection)
+
+    if (error) {
+      console.error('Error creating section:', error)
+      alert('Erreur lors de la création de la section')
+    } else {
+      loadPages()
+    }
+  }
+
+  // Check if a page is a section (title starts with §)
+  const isSection = (page: CrfpaPage) => page.title.startsWith('§')
+
   async function updatePageTitle(pageId: string) {
     if (!editTitle.trim()) return
 
@@ -120,19 +141,28 @@ export default function Sidebar({ subject }: SidebarProps) {
       className="w-64 min-h-screen border-r border-[var(--card-border)] p-4 bg-[var(--card-bg)]"
       style={{ borderColor: subjectInfo?.color + '40' }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <h2
-          className="font-bold text-lg"
-          style={{ color: subjectInfo?.color }}
-        >
-          Pages
-        </h2>
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <h2
+            className="font-bold text-lg"
+            style={{ color: subjectInfo?.color }}
+          >
+            Pages
+          </h2>
+          <button
+            onClick={addPage}
+            className="px-3 py-1 text-sm rounded-lg text-white hover:opacity-80 transition"
+            style={{ backgroundColor: subjectInfo?.color }}
+          >
+            + Ajouter
+          </button>
+        </div>
         <button
-          onClick={addPage}
-          className="px-3 py-1 text-sm rounded-lg text-white hover:opacity-80 transition"
-          style={{ backgroundColor: subjectInfo?.color }}
+          onClick={addSection}
+          className="w-full px-3 py-1.5 text-xs rounded-lg border-2 border-dashed hover:bg-[var(--hover-bg)] transition text-[var(--muted)]"
+          style={{ borderColor: subjectInfo?.color + '60' }}
         >
-          + Ajouter
+          + Ajouter un titre de section
         </button>
       </div>
 
@@ -164,7 +194,60 @@ export default function Sidebar({ subject }: SidebarProps) {
                     OK
                   </button>
                 </div>
+              ) : isSection(page) ? (
+                /* Section header - non-clickable */
+                <div className="flex items-center gap-1">
+                  <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
+                    <button
+                      onClick={() => movePage(page.id, 'up')}
+                      className={`px-1 text-xs text-[var(--muted)] hover:text-[var(--foreground)] ${
+                        index === 0 ? 'invisible' : ''
+                      }`}
+                      title="Monter"
+                      disabled={index === 0}
+                    >
+                      ▲
+                    </button>
+                    <button
+                      onClick={() => movePage(page.id, 'down')}
+                      className={`px-1 text-xs text-[var(--muted)] hover:text-[var(--foreground)] ${
+                        index === pages.length - 1 ? 'invisible' : ''
+                      }`}
+                      title="Descendre"
+                      disabled={index === pages.length - 1}
+                    >
+                      ▼
+                    </button>
+                  </div>
+                  <div
+                    className="flex-1 px-3 py-2 font-semibold text-sm border-b-2 mt-2"
+                    style={{
+                      color: subjectInfo?.color,
+                      borderColor: subjectInfo?.color + '40'
+                    }}
+                  >
+                    {page.title.replace('§ ', '')}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setEditingId(page.id)
+                      setEditTitle(page.title)
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-1 text-[var(--muted)] hover:text-[var(--foreground)]"
+                    title="Modifier"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => deletePage(page.id)}
+                    className="opacity-0 group-hover:opacity-100 p-1 text-[var(--muted)] hover:text-red-500"
+                    title="Supprimer"
+                  >
+                    🗑️
+                  </button>
+                </div>
               ) : (
+                /* Regular page */
                 <div className="flex items-center gap-1">
                   {/* Boutons de réordonnancement */}
                   <div className="flex flex-col opacity-0 group-hover:opacity-100 transition">
